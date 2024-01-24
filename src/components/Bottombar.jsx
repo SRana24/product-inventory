@@ -1,17 +1,13 @@
 import React, {useEffect} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-// import { Font } from "expo-font";
-
-// export const loadFonts = async () => {
-//   await Font.loadAsync({
-//     manroperegular: require("../../assets/fonts/Manrope-Regular.ttf"),
-//   });
-// };
+import {selectTotalPrice} from '../redux/addToCartSlice';
+import {useSelector} from 'react-redux';
 
 const Bottombar = () => {
-  //   useEffect(() => {
-  //     loadFonts();
-  //   }, []);
+  const Subtotal = useSelector(selectTotalPrice);
+  const deliveryCharges = 2;
+  const totalPrice = Subtotal + deliveryCharges;
+
   return (
     <View
       style={{
@@ -54,7 +50,7 @@ const Bottombar = () => {
               fontWeight: '500',
               fontFamily: 'manroperegular',
             }}>
-            $35.96
+            ${Subtotal.toFixed(2)}
           </Text>
         </View>
 
@@ -81,7 +77,7 @@ const Bottombar = () => {
               fontWeight: '500',
               fontFamily: 'manroperegular',
             }}>
-            $2.00
+            ${deliveryCharges.toFixed(2)}
           </Text>
         </View>
 
@@ -108,7 +104,7 @@ const Bottombar = () => {
               fontWeight: '500',
               fontFamily: 'manroperegular',
             }}>
-            $37.96
+            ${totalPrice.toFixed(2)}
           </Text>
         </View>
 

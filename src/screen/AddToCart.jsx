@@ -17,27 +17,17 @@ import CartHeader from '../components/CartHeader';
 import Bottombar from '../components/Bottombar';
 import {useDispatch} from 'react-redux';
 import {decreaseQuantity, increaseQuantity} from '../redux/addToCartSlice';
-// import {Font} from 'expo-font';
-
-// export const loadFonts = async () => {
-//   await Font.loadAsync({
-//     manroperegular: require('../assets/fonts/Manrope-Regular.ttf'),
-//   });
-// };
 
 const AddToCart = () => {
   const navigation = useNavigation();
   const cartItems = useSelector(selectCartItems);
   const dispatch = useDispatch();
-
-  //   useEffect(() => {
-  //     loadFonts();
-  //   }, []);
   return (
     <SafeAreaView>
       <View style={{position: 'relative'}}>
         <ScrollView
           stickyHeaderIndices={[0]}
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingBottom: 280,
@@ -70,7 +60,11 @@ const AddToCart = () => {
                       <TouchableOpacity
                         style={styles.DecrementContainer}
                         onPress={() => dispatch(decreaseQuantity(e?.id))}>
-                        {/* <NegativeIcon name="minus" size={24} color="#000" /> */}
+                        <Image
+                          source={require('../assets/Images/minusblack.png')}
+                          resizeMode={'cover'}
+                          style={{width: 16, height: 16}}
+                        />
                       </TouchableOpacity>
                       <Text style={styles.CounterTextStyles}>
                         {e?.quantity}
@@ -78,7 +72,11 @@ const AddToCart = () => {
                       <TouchableOpacity
                         style={styles.IncrementContainer}
                         onPress={() => dispatch(increaseQuantity(e?.id))}>
-                        {/* <PlusIcon name="plus" size={24} color="#000" /> */}
+                        <Image
+                          source={require('../assets/Images/plusblack.png')}
+                          resizeMode={'cover'}
+                          style={{width: 16, height: 16}}
+                        />
                       </TouchableOpacity>
                     </View>
                   </View>

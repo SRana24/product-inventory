@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   SafeAreaView,
@@ -13,6 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {selectCartItems} from '../redux/addToCartSlice';
 import Card from '../components/Card';
+import OfferCard from '../components/OfferCard';
 
 const Home = () => {
   const cartItems = useSelector(selectCartItems);
@@ -31,12 +32,20 @@ const Home = () => {
             <TouchableOpacity
               style={{position: 'relative'}}
               activeOpacity={0.7}
-              //   onPress={() =>
-              //     navigation.navigate('AddToCart', {
-              //       screen: 'AddToCart',
-              //     })
-              //   }
-            >
+              onPress={() =>
+                navigation.navigate('ProductStackNavigation', {
+                  screen: 'AddToCart',
+                })
+              }>
+              <Image
+                source={require('../assets/Images/handbag.png')}
+                resizeMode={'cover'}
+                style={{
+                  width: 24,
+                  height: 24,
+                  tintColor: '#fff',
+                }}
+              />
               {/* <BagIcon name="handbag" size={24} color="#fff" /> */}
               <View style={styles.AddtoCartCountContainer}>
                 <Text
@@ -109,39 +118,11 @@ const Home = () => {
         </View>
 
         {/* Offer Slider */}
-        <ScrollView
-          horizontal={true}
-          contentContainerStyle={{paddingHorizontal: 20, paddingVertical: 25}}
-          showsHorizontalScrollIndicator={false}>
-          <View style={styles.OfferSliderContainer}>
-            <Image
-              source={require('../assets/Images/image-icon.png')}
-              resizeMode={'cover'}
-              style={{width: 65, height: 65}}
-            />
-            <View>
-              <Text style={styles.OfferTextOne}>get</Text>
-              <Text style={styles.OfferTextTwo}>50% OFF</Text>
-              <Text style={styles.OffertextThree}>on first 03 order</Text>
-            </View>
-          </View>
 
-          <View style={styles.OfferSliderContainerTwo}>
-            <Image
-              source={require('../assets/Images/image-icon.png')}
-              resizeMode={'cover'}
-              style={{width: 65, height: 65}}
-            />
-            <View>
-              <Text style={styles.OfferTextOne}>get</Text>
-              <Text style={styles.OfferTextTwo}>50% OFF</Text>
-              <Text style={styles.OffertextThree}>on first 03 order</Text>
-            </View>
-          </View>
-        </ScrollView>
+        <OfferCard />
 
         {/* Recommended products list */}
-        <View style={{paddingLeft: 20}}>
+        <View>
           <View style={{paddingBottom: '4%'}}>
             <Text style={styles.ProductHeaderText}>Recommended</Text>
           </View>
@@ -255,6 +236,7 @@ const styles = StyleSheet.create({
     color: '#1E222B',
     fontFamily: 'manroperegular',
     fontStyle: 'normal',
+    paddingLeft: 16,
   },
   AddtoCartCountContainer: {
     width: 22,

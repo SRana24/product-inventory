@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity, Image} from 'react-native';
 // import Gobackicon from "@expo/vector-icons/Ionicons";
 // import BagIcon from "@expo/vector-icons/SimpleLineIcons";
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -12,13 +12,9 @@ import {useDispatch} from 'react-redux';
 import {addToCart} from '../redux/addToCartSlice';
 import {useSelector} from 'react-redux';
 import {selectCartItems} from '../redux/addToCartSlice';
-// import { Font } from "expo-font";
-
-// export const loadFonts = async () => {
-//   await Font.loadAsync({
-//     manroperegular: require("../assets/fonts/Manrope-Regular.ttf"),
-//   });
-// };
+import RatingComponent from '../components/RatingComponent';
+import {ImageSlider} from 'react-native-image-slider-banner';
+import {useFocusEffect} from '@react-navigation/native';
 
 const ProductDetails = () => {
   const cartItems = useSelector(selectCartItems);
@@ -27,17 +23,54 @@ const ProductDetails = () => {
   const dispatch = useDispatch();
 
   const {data: productDetails} = useGetProductDetailsQuery({
-    id: route.params.id,
+    id: route?.params?.id,
   });
 
-  function handleAddToCart(product) {
-    dispatch(addToCart(product));
-  }
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
 
-  //   useEffect(() => {
-  //     loadFonts();
-  //   }, []);
+  const isProductInCart = () => {
+    return cartItems.some(item => item.id === route?.params?.id);
+  };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      // Check if the product is in the cart when the component comes into focus
+      setIsAddedToCart(isProductInCart());
+    }, [cartItems]),
+  );
+
+  const handleAddToCart = product => {
+    const isInCart = isProductInCart();
+
+    if (!isInCart) {
+      // Dispatch addToCart action
+      dispatch(addToCart(product));
+
+      // Update state to disable the button
+      setIsAddedToCart(true);
+    }
+  };
+
+  const starImages = {
+    filled: require('../assets/Images/filledstar.png'),
+    half: require('../assets/Images/starhalf.png'),
+    empty: require('../assets/Images/staroutline.png'),
+  };
+
+  const formattedImages = productDetails?.images.map(imgUrl => ({
+    img: imgUrl,
+  }));
+
+  const Images = [
+    {
+      icon_image_url:
+        'https://images.pexels.com/photos/19882770/pexels-photo-19882770/free-photo-of-surfur-with-a-surfboard-walking-on-the-beach.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    },
+    {
+      icon_image_url:
+        'https://images.pexels.com/photos/19882770/pexels-photo-19882770/free-photo-of-surfur-with-a-surfboard-walking-on-the-beach.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    },
+  ];
   return (
     <SafeAreaView>
       <ScrollView
@@ -64,15 +97,25 @@ const ProductDetails = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
+              <Image
+                source={require('../assets/Images/chevronback0.png')}
+                resizeMode={'cover'}
+                style={{width: 16, height: 16}}
+              />
               {/* <Gobackicon name="chevron-back" size={24} color="#000" /> */}
             </TouchableOpacity>
             <TouchableOpacity
               style={{position: 'relative'}}
               onPress={() =>
-                navigation.navigate('AddToCart', {
+                navigation.navigate('ProductStackNavigation', {
                   screen: 'AddToCart',
                 })
               }>
+              <Image
+                source={require('../assets/Images/handbag.png')}
+                resizeMode={'cover'}
+                style={{width: 24, height: 24}}
+              />
               {/* <BagIcon name="handbag" size={24} color="#000" /> */}
               <View
                 style={{
@@ -101,7 +144,7 @@ const ProductDetails = () => {
           </View>
 
           {/* Title and subtitle */}
-          <View>
+          <View style={{paddingTop: 10}}>
             <Text
               style={{
                 fontSize: 50,
@@ -136,6 +179,14 @@ const ProductDetails = () => {
               emptyColor="#000"
               starSize={20}
             /> */}
+            <RatingComponent
+              rating={productDetails?.rating}
+              starImage={starImages}
+            />
+
+            {/* <View> */}
+
+            {/* </View> */}
             <Text
               style={{
                 color: '#A1A1AB',
@@ -152,12 +203,50 @@ const ProductDetails = () => {
         <View
           style={{
             width: '100%',
-            height: 207,
-            backgroundColor: '#f8f9fb',
-            marginTop: 20,
+            backgroundColor: '#fff',
+            position: 'relative',
           }}>
-          {/* <Slider /> */}
-          <Text>Slider Here*</Text>
+          <ImageSlider
+            data={formattedImages}
+            autoPlay={true}
+            timer={3000}
+            caroselImageStyle={{resizeMode: 'contain', height: 230}}
+            closeIconColor="#fff"
+            indicatorContainerStyle={{
+              right: 12,
+              bottom: 6,
+            }}
+            activeIndicatorStyle={{
+              backgroundColor: '#F9B023',
+              width: 24,
+              height: 5,
+            }}
+            inActiveIndicatorStyle={{
+              width: 24,
+              height: 5,
+              borderRadius: 4,
+            }}
+          />
+
+          <View
+            style={{
+              position: 'absolute',
+              top: 24,
+              right: 20,
+              backgroundColor: '#fff',
+              padding: 10,
+              width: 58,
+              height: 58,
+              borderRadius: 20,
+              justifyContent: 'center', // Center vertically
+              alignItems: 'center',
+            }}>
+            <Image
+              source={require('../assets/Images/Heart.png')}
+              resizeMode={'cover'}
+              style={{width: 26, height: 24}}
+            />
+          </View>
         </View>
 
         {/* Prices, discounts and checkout and add to cart buttons */}
@@ -176,7 +265,7 @@ const ProductDetails = () => {
                 color: '#2A4BA0',
                 fontFamily: 'manroperegular',
               }}>
-              ${productDetails?.price}
+              ${productDetails?.price.toFixed(2)}
             </Text>
             <Text
               style={{
@@ -196,7 +285,7 @@ const ProductDetails = () => {
                 marginLeft: 20,
               }}>
               <Text style={{color: '#FAFBFD', fontFamily: 'manroperegular'}}>
-                {Math.ceil(productDetails?.discountPercentage)}% OFF
+                {productDetails?.discountPercentage.toFixed(2)}% OFF
               </Text>
             </View>
           </View>
@@ -215,23 +304,24 @@ const ProductDetails = () => {
               activeOpacity={0.7}
               style={{
                 borderWidth: 1,
-                borderColor: '#2A4BA0',
+                borderColor: isAddedToCart ? '#888' : '#2A4BA0',
                 borderRadius: 20,
                 width: '45%',
                 height: 56,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-              }}>
+                backgroundColor: isAddedToCart ? '#888' : '#fff',
+              }}
+              disabled={isAddedToCart}>
               <Text
                 style={{
-                  textTransform: 'capitalize',
-                  color: '#2A4BA0',
+                  color: isAddedToCart ? '#fff' : '#2A4BA0',
                   fontSize: 14,
                   fontWeight: '600',
                   fontFamily: 'manroperegular',
                 }}>
-                add to cart
+                {isAddedToCart ? 'Added to Cart' : 'Add to Cart'}
               </Text>
             </TouchableOpacity>
 
