@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   Text,
   View,
@@ -8,24 +8,38 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-// import AddToCartIcon from "@expo/vector-icons/AntDesign";
-// import WishlistIcon from "@expo/vector-icons/AntDesign";
 import {useNavigation} from '@react-navigation/native';
 import {addToCart} from '../redux/addToCartSlice';
-// import * as Font from 'expo-font';
+import {selectCartItems} from '../redux/addToCartSlice';
+import {useToast} from 'react-native-toast-notifications';
 
-// export const loadFonts = async () => {
-//   await Font?.loadAsync({
-//     manroperegular: require("./../../assets/fonts/Manrope-Regular.ttf"),
-//   });
-// };
-
-const Card = ({listData, isLoading, error}) => {
+const Card = ({
+  listData,
+  isLoading,
+  error,
+  favoriteStatus,
+  handleToggleFavorite,
+}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const toast = useToast();
+
+  function showToast(message, type) {
+    toast.show(message, {type});
+  }
 
   function handleAddToCartItem(product) {
-    dispatch(addToCart(product));
+    if (!isProductInCart(product.id)) {
+      dispatch(addToCart(product));
+      showToast('Product added to your cart', 'success');
+    } else {
+      showToast('This product is already in your cart!', 'warning');
+    }
+  }
+
+  function isProductInCart(productId) {
+    return cartItems.some(item => item.id === productId);
   }
 
   function handleProductNavigation(id) {
@@ -33,13 +47,11 @@ const Card = ({listData, isLoading, error}) => {
       screen: 'ProductDetails',
       params: {
         id: id,
+        favoriteStatus: favoriteStatus,
       },
     });
   }
 
-  //   useEffect(() => {
-  //     loadFonts();
-  //   }, []);
   return (
     <View style={styles.MainProductsContainer}>
       {error ? (
@@ -70,10 +82,14 @@ const Card = ({listData, isLoading, error}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.cardContainer}
-              onPress={() => handleProductNavigation(e?.id)}
+              onPress={() => {
+                handleProductNavigation(e?.id);
+              }}
               key={e?.id}>
               <View style={styles.imageContainer}>
-                <View
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => handleToggleFavorite(e?.id)}
                   style={{
                     position: 'absolute',
                     top: 12,
@@ -85,11 +101,15 @@ const Card = ({listData, isLoading, error}) => {
                     zIndex: 100,
                   }}>
                   <Image
-                    source={require('../assets/Images/newred.png')}
+                    source={
+                      favoriteStatus[e?.id]
+                        ? require('../assets/Images/newred.png')
+                        : require('../assets/Images/newoutline.png')
+                    }
                     resizeMode={'cover'}
                     style={{width: 14, height: 14}}
                   />
-                </View>
+                </TouchableOpacity>
                 <Image
                   source={{uri: e?.thumbnail}}
                   resizeMode={'cover'}
@@ -102,11 +122,16 @@ const Card = ({listData, isLoading, error}) => {
                 <View style={{position: 'absolute', right: 12, top: 6}}>
                   <TouchableOpacity
                     activeOpacity={0.7}
-                    onPress={() => handleAddToCartItem(e)}>
+                    onPress={() => handleAddToCartItem(e)}
+                    disabled={isProductInCart(e?.id)}>
                     <Image
                       source={require('../assets/Images/newplusblue.png')}
                       resizeMode={'cover'}
-                      style={{width: 24, height: 24}}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        tintColor: isProductInCart(e?.id) ? 'gray' : undefined,
+                      }}
                     />
                   </TouchableOpacity>
                 </View>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {SafeAreaView, Text, View} from 'react-native';
 
-const Favourites = () => {
+const Favourite = () => {
   return (
     <SafeAreaView>
       <View>
@@ -11,4 +11,4 @@ const Favourites = () => {
   );
 };
 
-export default Favourites;
+export default Favourite;

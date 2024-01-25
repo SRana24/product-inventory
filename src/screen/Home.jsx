@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   SafeAreaView,
@@ -19,6 +19,15 @@ const Home = () => {
   const cartItems = useSelector(selectCartItems);
   const navigation = useNavigation();
   const {data: productList, isLoading, error} = useGetProductsListQuery();
+
+  const [favoriteStatus, setFavoriteStatus] = useState({});
+
+  const handleToggleFavorite = id => {
+    setFavoriteStatus(prevStatus => ({
+      ...prevStatus,
+      [id]: !prevStatus[id],
+    }));
+  };
 
   return (
     <SafeAreaView>
@@ -126,7 +135,14 @@ const Home = () => {
           <View style={{paddingBottom: '4%'}}>
             <Text style={styles.ProductHeaderText}>Recommended</Text>
           </View>
-          <Card listData={productList} isLoading={isLoading} error={error} />
+          <Card
+            listData={productList}
+            isLoading={isLoading}
+            error={error}
+            favoriteStatus={favoriteStatus}
+            setFavoriteStatus={setFavoriteStatus}
+            handleToggleFavorite={handleToggleFavorite}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
