@@ -1,11 +1,41 @@
 import React from 'react';
-import {SafeAreaView, Text, View} from 'react-native';
+import {Image, SafeAreaView, Text, View} from 'react-native';
 
 const Category = () => {
   return (
     <SafeAreaView>
-      <View>
-        <Text>Category</Text>
+      <View
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <View style={{height: 100}}>
+          <Text
+            style={{
+              color: '#2A4BA0',
+              fontFamily: 'manrope',
+              fontWeight: '600',
+              fontSize: 18,
+            }}>
+            Category
+          </Text>
+        </View>
+        <View style={{height: 200}}>
+          <Image
+            source={require('../assets/Images/nodata.png')}
+            style={{height: 100, width: 100}}
+          />
+        </View>
+        <Text
+          style={{
+            color: '#2A4BA0',
+            fontFamily: 'manrope',
+            fontWeight: '600',
+            fontSize: 18,
+          }}>
+          No Data Available
+        </Text>
       </View>
     </SafeAreaView>
   );

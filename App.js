@@ -14,11 +14,15 @@ export default function App() {
     // Define styles or content based on the toast type
     switch (type) {
       case 'success':
-        backgroundColor = '#2A4BA0';
-        color = '#F8F9FB';
+        backgroundColor = '#fff';
+        borderColor = '#2A4BA0';
+        borderWidth = 1;
+        color = '#2A4BA0';
         break;
       case 'warning':
         backgroundColor = '#FFC83A';
+        borderColor = '#153075';
+        borderWidth = 1;
         color = '#153075';
         break;
       default:
@@ -27,7 +31,14 @@ export default function App() {
     }
 
     return (
-      <View style={{padding: 15, backgroundColor, borderRadius: 10}}>
+      <View
+        style={{
+          padding: 15,
+          backgroundColor,
+          borderRadius: 10,
+          borderColor,
+          borderWidth,
+        }}>
         <Text style={{color}}>{message}</Text>
       </View>
     );
@@ -36,7 +47,7 @@ export default function App() {
   return (
     <ToastProvider
       placement="top"
-      duration={5000}
+      duration={2000}
       animationType="slide-in"
       animationDuration={250}
       textStyle={{fontSize: 20}}

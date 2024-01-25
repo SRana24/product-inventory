@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -14,12 +14,42 @@ import {useNavigation} from '@react-navigation/native';
 import CartHeader from '../components/CartHeader';
 import Bottombar from '../components/Bottombar';
 import {useDispatch} from 'react-redux';
-import {decreaseQuantity, increaseQuantity} from '../redux/addToCartSlice';
+import {
+  decreaseQuantity,
+  increaseQuantity,
+  removeItem,
+} from '../redux/addToCartSlice';
+import {useToast} from 'react-native-toast-notifications';
 
 const AddToCart = () => {
   const navigation = useNavigation();
   const cartItems = useSelector(selectCartItems);
   const dispatch = useDispatch();
+  const toast = useToast();
+
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const toggleEditMode = () => {
+    setIsEditMode(prevMode => !prevMode);
+  };
+
+  function showToast(message, type) {
+    toast.show(message, {type});
+  }
+
+  const handleAdd = id => {
+    dispatch(increaseQuantity(id));
+    showToast('Quantity Added', 'success');
+  };
+
+  const handleMinus = id => {
+    dispatch(decreaseQuantity(id));
+    showToast('Quantity Removed', 'success');
+  };
+  const handleDelete = id => {
+    dispatch(removeItem(id));
+    showToast('Item removed from cart', 'success');
+  };
   return (
     <SafeAreaView>
       <View style={{position: 'relative'}}>
@@ -39,8 +69,8 @@ const AddToCart = () => {
           {cartItems?.length !== 0 ? (
             cartItems?.map((e, index) => {
               return (
-                <>
-                  <View style={styles.MainCartContainer} key={index}>
+                <View key={index}>
+                  <View style={styles.MainCartContainer}>
                     <View style={styles.SubCartContainer}>
                       <Image
                         source={{uri: e?.thumbnail}}
@@ -55,31 +85,73 @@ const AddToCart = () => {
 
                     {/* Increment and decrement counter */}
                     <View style={styles.CounterContainer}>
-                      <TouchableOpacity
-                        style={styles.DecrementContainer}
-                        onPress={() => dispatch(decreaseQuantity(e?.id))}>
-                        <Image
-                          source={require('../assets/Images/minusblack.png')}
-                          resizeMode={'cover'}
-                          style={{width: 16, height: 16}}
-                        />
-                      </TouchableOpacity>
-                      <Text style={styles.CounterTextStyles}>
-                        {e?.quantity}
-                      </Text>
-                      <TouchableOpacity
-                        style={styles.IncrementContainer}
-                        onPress={() => dispatch(increaseQuantity(e?.id))}>
-                        <Image
-                          source={require('../assets/Images/plusblack.png')}
-                          resizeMode={'cover'}
-                          style={{width: 16, height: 16}}
-                        />
-                      </TouchableOpacity>
+                      {!isEditMode ? (
+                        <>
+                          <TouchableOpacity
+                            style={styles.DecrementContainer}
+                            onPress={() => handleMinus(e?.id)}>
+                            <Image
+                              source={require('../assets/Images/minusblack.png')}
+                              resizeMode={'cover'}
+                              style={{width: 16, height: 16}}
+                            />
+                          </TouchableOpacity>
+                          <Text style={styles.CounterTextStyles}>
+                            {e?.quantity}
+                          </Text>
+                          <TouchableOpacity
+                            style={styles.IncrementContainer}
+                            onPress={() => handleAdd(e?.id)}>
+                            <Image
+                              source={require('../assets/Images/plusblack.png')}
+                              resizeMode={'cover'}
+                              style={{width: 16, height: 16}}
+                            />
+                          </TouchableOpacity>
+                        </>
+                      ) : (
+                        <TouchableOpacity
+                          style={{
+                            width: 100,
+                            alignContent: 'center',
+                            justifyContent: 'center',
+                            display: 'flex',
+                            paddingLeft: '50%',
+                          }}
+                          onPress={() => handleDelete(e?.id)}>
+                          <Image
+                            source={require('../assets/Images/delete.png')}
+                            resizeMode={'cover'}
+                            style={{
+                              width: 28,
+                              height: 28,
+                            }}
+                          />
+                        </TouchableOpacity>
+                      )}
                     </View>
                   </View>
                   <View style={styles.DividerStyles} />
-                </>
+
+                  <TouchableOpacity
+                    onPress={() => toggleEditMode()}
+                    style={{
+                      display: 'flex',
+                      paddingTop: 8,
+                      paddingRight: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: '500',
+                        fontFamily: 'manrope',
+                        color: '#2A4BA0',
+                        textAlign: 'right',
+                      }}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               );
             })
           ) : (

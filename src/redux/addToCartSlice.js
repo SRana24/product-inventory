@@ -38,10 +38,14 @@ const addToCartSlice = createSlice({
         }
       }
     },
+    removeItem: (state, action) => {
+      const itemId = action.payload;
+      state.items = state.items.filter(item => item.id !== itemId);
+    },
   },
 });
 
-export const {addToCart, increaseQuantity, decreaseQuantity} =
+export const {addToCart, increaseQuantity, decreaseQuantity, removeItem} =
   addToCartSlice.actions;
 export const selectTotalPrice = state => {
   return state.cart.items.reduce((total, item) => {

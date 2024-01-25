@@ -219,15 +219,18 @@ const ProductDetails = () => {
           <View
             style={{
               width: '100%',
-              height: 220,
               backgroundColor: '#fff',
               position: 'relative',
+              paddingTop: 6,
             }}>
             <ImageSlider
               data={formattedImages}
               autoPlay={true}
               timer={3000}
-              caroselImageStyle={{resizeMode: 'contain'}}
+              caroselImageStyle={{
+                resizeMode: 'stretch',
+                height: 200,
+              }}
               closeIconColor="#fff"
               indicatorContainerStyle={{
                 right: 12,
@@ -249,12 +252,12 @@ const ProductDetails = () => {
               onPress={() => handleFavoriteToggle(productDetails?.id)}
               style={{
                 position: 'absolute',
-                top: 24,
+                top: 20,
                 right: 20,
                 backgroundColor: '#fff',
                 padding: 10,
-                width: 58,
-                height: 58,
+                width: 56,
+                height: 56,
                 borderRadius: 20,
                 justifyContent: 'center', // Center vertically
                 alignItems: 'center',
@@ -348,6 +351,11 @@ const ProductDetails = () => {
               </TouchableOpacity>
 
               <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('ProductStackNavigation', {
+                    screen: 'AddToCart',
+                  })
+                }
                 activeOpacity={0.7}
                 style={{
                   borderRadius: 20,
