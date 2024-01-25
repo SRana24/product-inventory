@@ -1,30 +1,22 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-// import Gobackicon from "@expo/vector-icons/Ionicons";
 import {useNavigation} from '@react-navigation/native';
 
 const CartHeader = ({cartItems}) => {
   const navigation = useNavigation();
 
+  //   THIS HEADER IS CALLED IN ADD TO CART , HEADER
+
   return (
     <View style={styles.MainHeaderContainer}>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
-        style={{
-          backgroundColor: '#f8f9fb',
-          width: 40,
-          height: 40,
-          borderRadius: 40 / 2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+        style={styles.backButtonContainer}>
         <Image
           source={require('../assets/Images/chevronback0.png')}
           resizeMode={'cover'}
           style={{width: 16, height: 16}}
         />
-        {/* <Gobackicon name="chevron-back" size={24} color="#000" /> */}
       </TouchableOpacity>
       <Text style={styles.HeaderTitle}>
         Shopping Cart{' '}
@@ -51,5 +43,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
     marginLeft: 20,
+  },
+  backButtonContainer: {
+    backgroundColor: '#f8f9fb',
+    width: 40,
+    height: 40,
+    borderRadius: 40 / 2,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

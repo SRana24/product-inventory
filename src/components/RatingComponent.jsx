@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Image} from 'react-native';
 
+// RATING COMPONENT CALLED IN PRODUCT DETAILS
 const RatingComponent = ({rating, starImage}) => {
   const maxStars = 5;
 

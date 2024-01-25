@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   Text,
@@ -25,10 +25,11 @@ const Card = ({
   const cartItems = useSelector(selectCartItems);
   const toast = useToast();
 
+  //   TOAST MESSSAGE TO SHOW THAT THE ITEM IS ADDED
   function showToast(message, type) {
     toast.show(message, {type});
   }
-
+  // ADD TO CART FUCNTION
   function handleAddToCartItem(product) {
     if (!isProductInCart(product.id)) {
       dispatch(addToCart(product));
@@ -38,10 +39,12 @@ const Card = ({
     }
   }
 
+  //   CHECHK IF THE ITEM IS ALREADY IN CART
   function isProductInCart(productId) {
     return cartItems.some(item => item.id === productId);
   }
 
+  //   ROUTE TO PRODUC DETAIL PAGE
   function handleProductNavigation(id) {
     navigation.navigate('ProductStackNavigation', {
       screen: 'ProductDetails',
@@ -55,25 +58,11 @@ const Card = ({
   return (
     <View style={styles.MainProductsContainer}>
       {error ? (
-        <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: 100,
-          }}>
-          <Text>Something went wrong!</Text>
+        <View style={styles.loaderContainer}>
+          <Text style={styles.errorText}>Something went wrong!</Text>
         </View>
       ) : isLoading ? (
-        <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: 100,
-          }}>
+        <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
       ) : (
@@ -86,6 +75,7 @@ const Card = ({
                 handleProductNavigation(e?.id);
               }}
               key={e?.id}>
+              {/* IMAGE CONTAINER */}
               <View style={styles.imageContainer}>
                 <TouchableOpacity
                   activeOpacity={0.8}
@@ -116,11 +106,14 @@ const Card = ({
                   style={styles.image}
                 />
               </View>
+              {/* TITLE AND PRICE */}
               <View style={styles.ProductAndTitlePricesContainer}>
                 <Text style={styles.PrcieStyles}>$ {e?.price}</Text>
                 <Text style={styles.TitleStyles}>{e?.title}</Text>
-                <View style={{position: 'absolute', right: 12, top: 6}}>
+                {/* PLUS BUTTON FOR ADDING IN CART */}
+                <View style={{position: 'absolute', right: 14, top: 3}}>
                   <TouchableOpacity
+                    style={{height: 22, width: 22}}
                     activeOpacity={0.7}
                     onPress={() => handleAddToCartItem(e)}
                     disabled={isProductInCart(e?.id)}>
@@ -128,8 +121,8 @@ const Card = ({
                       source={require('../assets/Images/newplusblue.png')}
                       resizeMode={'cover'}
                       style={{
-                        width: 24,
-                        height: 24,
+                        width: '100%',
+                        height: '100%',
                         tintColor: isProductInCart(e?.id) ? 'gray' : undefined,
                       }}
                     />
@@ -154,7 +147,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
-    // backgroundColor: 'red',
     padding: 8,
   },
   SubProductsContainer: {
@@ -191,8 +183,6 @@ const styles = StyleSheet.create({
   },
   ProductAndTitlePricesContainer: {
     display: 'flex',
-    // flex: 1,
-    // flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     backgroundColor: '#F8F9FB',
@@ -212,7 +202,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '400',
     fontFamily: 'manroperegular',
-    paddingTop: 4,
+    paddingTop: 6,
   },
   cardContainer: {
     width: '44%',
@@ -256,5 +246,17 @@ const styles = StyleSheet.create({
   descriptionContainer: {
     paddingHorizontal: 10,
     paddingVertical: 6,
+  },
+  errorText: {
+    color: '#000',
+    fontFamily: 'manroperegular',
+    fontWeight: '600',
+  },
+  loaderContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 100,
   },
 });

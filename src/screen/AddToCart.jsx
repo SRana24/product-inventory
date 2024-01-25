@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -10,8 +10,6 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 import {selectCartItems} from '../redux/addToCartSlice';
-// import NegativeIcon from '@expo/vector-icons/AntDesign';
-// import PlusIcon from '@expo/vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import CartHeader from '../components/CartHeader';
 import Bottombar from '../components/Bottombar';

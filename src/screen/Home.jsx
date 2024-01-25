@@ -14,19 +14,34 @@ import {useSelector} from 'react-redux';
 import {selectCartItems} from '../redux/addToCartSlice';
 import Card from '../components/Card';
 import OfferCard from '../components/OfferCard';
+import {useToast} from 'react-native-toast-notifications';
 
 const Home = () => {
   const cartItems = useSelector(selectCartItems);
   const navigation = useNavigation();
+  const toast = useToast();
   const {data: productList, isLoading, error} = useGetProductsListQuery();
+  function showToast(message, type) {
+    toast.show(message, {type});
+  }
 
   const [favoriteStatus, setFavoriteStatus] = useState({});
 
   const handleToggleFavorite = id => {
-    setFavoriteStatus(prevStatus => ({
-      ...prevStatus,
-      [id]: !prevStatus[id],
-    }));
+    setFavoriteStatus(prevStatus => {
+      const newStatus = !prevStatus[id];
+
+      // Display toast message based on the new status
+      showToast(
+        newStatus ? 'Added to favorites' : 'Removed from favorites',
+        'success',
+      );
+
+      return {
+        ...prevStatus,
+        [id]: newStatus,
+      };
+    });
   };
 
   return (
@@ -55,7 +70,6 @@ const Home = () => {
                   tintColor: '#fff',
                 }}
               />
-              {/* <BagIcon name="handbag" size={24} color="#fff" /> */}
               <View style={styles.AddtoCartCountContainer}>
                 <Text
                   style={{

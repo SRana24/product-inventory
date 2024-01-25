@@ -39,10 +39,17 @@ const ProductDetails = () => {
 
   const [newStatus, setNewStatus] = useState(favoriteStatus);
   const handleFavoriteToggle = id => {
-    setNewStatus(prevStatus => ({
-      ...prevStatus,
-      [id]: !prevStatus[id],
-    }));
+    setNewStatus(prevStatus => {
+      const notifyStatus = !prevStatus[id];
+      showToast(
+        notifyStatus ? 'Added to favorites' : 'Removed from favorites',
+        'success',
+      );
+      return {
+        ...prevStatus,
+        [id]: notifyStatus,
+      };
+    });
   };
   const [isAddedToCart, setIsAddedToCart] = useState(false);
 
@@ -212,6 +219,7 @@ const ProductDetails = () => {
           <View
             style={{
               width: '100%',
+              height: 220,
               backgroundColor: '#fff',
               position: 'relative',
             }}>
@@ -219,7 +227,7 @@ const ProductDetails = () => {
               data={formattedImages}
               autoPlay={true}
               timer={3000}
-              caroselImageStyle={{resizeMode: 'contain', height: 230}}
+              caroselImageStyle={{resizeMode: 'contain'}}
               closeIconColor="#fff"
               indicatorContainerStyle={{
                 right: 12,
@@ -254,8 +262,8 @@ const ProductDetails = () => {
               <Image
                 source={
                   newStatus?.[productDetails?.id]
-                    ? require('../assets/Images/newred.png')
-                    : require('../assets/Images/newoutline.png')
+                    ? require('../assets/Images/redHeart2.png')
+                    : require('../assets/Images/blackHeart.png')
                 }
                 resizeMode={'cover'}
                 style={{width: 26, height: 24}}

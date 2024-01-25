@@ -2,6 +2,7 @@ import React from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 const OfferCard = () => {
+  // STATIC OFFER CARDS ON HOME PAGE
   return (
     <View>
       <ScrollView
