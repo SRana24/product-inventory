@@ -163,7 +163,12 @@ const AddToCart = () => {
                 alignItems: 'center',
                 display: 'center',
               }}>
-              <Text style={{fontFamily: 'manroperegular'}}>
+              <Text
+                style={{
+                  fontFamily: 'manroperegular',
+                  color: '#2A4BA0',
+                  fontWeight: '600',
+                }}>
                 Nothing Added to the Cart!
               </Text>
             </View>
