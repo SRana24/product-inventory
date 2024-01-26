@@ -109,7 +109,12 @@ const Card = ({
               {/* TITLE AND PRICE */}
               <View style={styles.ProductAndTitlePricesContainer}>
                 <Text style={styles.PrcieStyles}>$ {e?.price}</Text>
-                <Text style={styles.TitleStyles}>{e?.title}</Text>
+                <Text
+                  style={styles.TitleStyles}
+                  numberOfLines={2}
+                  ellipsizeMode="tail">
+                  {e?.title}
+                </Text>
                 {/* PLUS BUTTON FOR ADDING IN CART */}
                 <View style={{position: 'absolute', right: 14, top: 3}}>
                   <TouchableOpacity
@@ -203,6 +208,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: 'manroperegular',
     paddingTop: 6,
+    textTransform: 'capitalize',
   },
   cardContainer: {
     width: '44%',

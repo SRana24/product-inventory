@@ -30,13 +30,10 @@ const Home = () => {
   const handleToggleFavorite = id => {
     setFavoriteStatus(prevStatus => {
       const newStatus = !prevStatus[id];
-
-      // Display toast message based on the new status
       showToast(
         newStatus ? 'Added to favorites' : 'Removed from favorites',
         'success',
       );
-
       return {
         ...prevStatus,
         [id]: newStatus,
